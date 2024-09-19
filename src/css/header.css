@@ -1,5 +1,8 @@
-.header {
+/* .header {
   padding: 20px 0;
+}
+.container{
+  margin-left: 0;
 }
 .nav {
   display: flex;
@@ -41,4 +44,4 @@
 }
 .nav-link.active::after {
   background: #747bff;
-}
+} */
