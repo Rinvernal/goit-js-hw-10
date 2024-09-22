@@ -2,7 +2,6 @@
 import flatpickr from "flatpickr";
 // Додатковий імпорт стилів
 import "flatpickr/dist/flatpickr.min.css";
-flatpickr("#datetime-picker", {});
 
 const options = {
   enableTime: true,
@@ -15,14 +14,35 @@ const options = {
 };
 
 const btn = document.querySelector('button[data-start]');
-const days = document.querySelector('span[data-days]');
-const hours = document.querySelector('span[data-hours]');
-const minutes = document.querySelector('span[data-minutes]');
-const seconds = document.querySelector('span[data-seconds]');
+const daysEl = document.querySelector('span[data-days]');
+const hoursEl = document.querySelector('span[data-hours]');
+const minutesEl = document.querySelector('span[data-minutes]');
+const secondsEl = document.querySelector('span[data-seconds]');
 
 let userSelectedDate = null;
 
+const flat =  flatpickr ("#datetime-picker", {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
 
+  onClose(selectedDate) {
+    userSelectedDate = selectedDate[0];
+    if (userSelectedDate < new Date()) {
+      window.alert("Please choose a date in the future");
+      btn.disabled = true;
+    } else {
+      btn.disabled = false;
+    }
+  }
+});
+
+btn.addEventListener('click', () => {
+  flat.input.setAttribute("disabled", true);
+  btn.setAttribute("disabled", true);
+  timer();
+});
 
 function timer() {
   const intervalId = setInterval(() => {
@@ -31,29 +51,18 @@ function timer() {
 
     if (delta <= 0) {
       clearInterval(intervalId);
+
+      flat.input.removeAttribute('disabled');
+      btn.removeAttribute('disabled');
       return;
     }
     const {days, hours, minutes, seconds} = convertMs(delta);
-    days.textContent = addLeadingZero(days);
-    hours.textContent = addLeadingZero(hours);
-    minutes.textContent = addLeadingZero(minutes);
-    seconds.textContent = addLeadingZero(seconds);
+    daysEl.textContent = addLeadingZero(days);
+    hoursEl.textContent = addLeadingZero(hours);
+    minutesEl.textContent = addLeadingZero(minutes);
+    secondsEl.textContent = addLeadingZero(seconds);
   }, 1000);
 }
-
-
-
-
-
-function onClose(selectedDate) {
-  userSelectedDate = selectedDate[0];
-  if (userSelectedDate < new Date()) {
-    window.alert("Please choose a date in the future");
-    btn.isActive = true;
-  } else {
-    btn.isActive = false;
-  }
-};
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -74,9 +83,12 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
+
+daysEl.textContent = addLeadingZero(0);
+
 
 
 
