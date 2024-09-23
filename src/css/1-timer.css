@@ -1,0 +1,17 @@
+.timer{
+  display: flex; 
+  justify-content: center;
+  gap: 30px;
+}
+.field{
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+.value {
+  font-size: 24px; /* Стиль для значення */
+}
+.label {
+  font-size: 14px; /* Стиль для підпису */
+  color: gray; /* Наприклад, сірий для підпису */
+}
